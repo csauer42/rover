@@ -1,0 +1,12 @@
+Rover Controller Python Application on PC
+
+-wifi connection to rover in access point mode
+-displays video stream from camera
+-reads input from gamepad, converts to control code, sends to socket
+-reads reply from RPi socket server, displays battery voltage/low voltage warning
+
+Python librarys for 
+  gui: ?
+  gamepad: ?
+  display: ?
+
