@@ -7,6 +7,6 @@ Rover Controller Python Application on PC
 
 Python librarys for 
   gui: ?
-  gamepad: ?
+  gamepad: pygame
   display: ?
 
