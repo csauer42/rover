@@ -3,3 +3,4 @@ avr/build
 rpi/bin
 rpi/build
 *.swp
+*/__pycache__
