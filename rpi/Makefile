@@ -17,7 +17,7 @@ CXXFLAGS += -g
 CFLAGS += -g
 endif
 
-all: Intermediary
+all: Intermediary SerialTest strip
 
 
 test: $(TESTS)
@@ -40,6 +40,10 @@ $(BUILD)/%.lo: $(SRC)/%.cpp
 Intermediary: $(BUILD)/Intermediary.o
 	@mkdir -p $(BIN)
 	$(CXX) $(CXXFLAGS) -o $(BIN)/$@ $< -lzmq
+
+SerialTest: $(BUILD)/SerialTest.o $(BUILD)/serial_setup.o
+	@mkdir -p $(BIN)
+	$(CXX) $(CXXFLAGS) -o $(BIN)/$@ $^
 
 # utility
 strip:
