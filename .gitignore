@@ -4,3 +4,4 @@ rpi/bin
 rpi/build
 *.swp
 */__pycache__
+/Debug/

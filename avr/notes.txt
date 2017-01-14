@@ -1,8 +1,0 @@
-Atmel 328p
-
--2x pwm output for servo control
--2x pwn output for dc motor control
--analog input for battery voltage
--ISP connections
-
-AVR connects via UART[SPI?] to RPi0, reading 4-byte control codes for motors and replying with battery voltage.
