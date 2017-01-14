@@ -23,7 +23,7 @@
 #define ERRLREMOVE   -32
 
 /** @brief Serial port lock file name */
-#define LOCKNAME "/var/lock/serial_lock"
+#define LOCKNAME "/tmp/serial_lock"
 /** @brief Baudrate for ftdi serial connection */
 #define TTYBAUDRATE B9600
 

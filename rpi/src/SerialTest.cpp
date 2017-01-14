@@ -109,7 +109,6 @@ int getValue() {
 void writeValue(int channel, int value, int fd) {
     int rc;
     unsigned char bytes[6];
-    unsigned char ret[1];
     memset(bytes, 0, 6);
     memset(bytes, 0, 1);
     std::cout << std::endl << "Writing value " << value << " to channel " << channel << std::endl;
@@ -117,10 +116,13 @@ void writeValue(int channel, int value, int fd) {
     rc = write(fd, bytes, 6);
     if (rc < 0) {
         std::cerr << "Error on write: " << rc << std::endl;
-    } 
-    rc = read(fd, ret, 1);
+    } else {
+        std::cout << "Write success: " << rc << std::endl;
+    }
+    std::cout << "Waiting for response..." << std::endl;
+    rc = read(fd, bytes, 1);
     if (rc >= 1) {
-        std::cout << "Reply: " << ret[0] << std::endl;
+        std::cout << "Reply: " << (int)bytes[0] << std::endl;
     } else {
         std::cerr << "Error on read: " << rc << std::endl;
     }

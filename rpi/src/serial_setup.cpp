@@ -13,7 +13,7 @@ int open_port(const char *port) {
         return ERRLLOCK;
     }
 
-    fd = open(port, O_RDWR | O_NOCTTY | O_NDELAY);
+    fd = open(port, O_RDWR | O_NOCTTY); // | O_NDELAY);
     if (fd == -1) {
         return ERRPOPEN;
     } else {
@@ -42,7 +42,7 @@ int setup_port(int fd) {
     tty.c_cc[VERASE]   = 0;     /* del */
     tty.c_cc[VKILL]    = 0;     /* @ */
     tty.c_cc[VEOF]     = 4;     /* Ctrl-d */
-    tty.c_cc[VTIME]    = 0;     /* inter-character timer unused */
+    tty.c_cc[VTIME]    = 5;    // was 0 /* inter-character timer unused */
     tty.c_cc[VMIN]     = 1;     /* blocking read until 1 character arrives */
     tty.c_cc[VSWTC]    = 0;     /* '\0' */
     tty.c_cc[VSTART]   = 0;     /* Ctrl-q */
