@@ -9,10 +9,6 @@
 #include <iostream>
 #include "serial_setup.h"
 
-int getChannel();
-int getValue();
-void writeValue(int, int, int);
-
 int main(int argc, char** argv) {
     if (argc != 2) {
         printf("Usage: ./SerialTest [port]\n");
@@ -65,10 +61,10 @@ int main(int argc, char** argv) {
     // end serial port setup
 
     // begin main process
+    unsigned char bytes[1];
     while (1) {
-        int channel = getChannel();
-        int value = getValue();
-        writeValue(channel, value, fd);
+        rc = read(fd, bytes, 1);
+        std::cout << bytes[0] << std::flush;
     }
     // end main process
 
@@ -83,55 +79,4 @@ int main(int argc, char** argv) {
             std::cerr << "Error removing file." << std::endl;
     }
     return 0;
-}
-
-int getChannel() {
-    int channel;
-    std::cout << std::endl << "Select pwm channel:" << std::endl <<
-                              "1) OC0A" << std::endl <<
-                              "2) OC0B" << std::endl <<
-                              "3) OC1A" << std::endl <<
-                              "4) OC1B" << std::endl <<
-                              "5) OC2A" << std::endl <<
-                              "6) OC2B" << std::endl <<
-                              "? ";
-    std::cin >> channel;
-    return channel;
-}
-
-int getValue() {
-    int value;
-    std::cout << std::endl << "Input value (0-255): ";
-    std::cin >> value;
-    return value;
-}
-
-void writeValue(int channel, int value, int fd) {
-    int rc;
-    unsigned char bytes[6];
-    memset(bytes, 0, 6);
-    memset(bytes, 0, 1);
-    std::cout << std::endl << "Writing value " << value << " to channel " << channel << std::endl;
-    bytes[channel-1] = (value & 0xFF);
-    //***
-    bytes[0] = 0x20;
-    bytes[1] = 0x40;
-    bytes[2] = 0x60;
-    bytes[3] = 0x80;
-    bytes[4] = 0xA0;
-    bytes[5] = 0xC0;
-    //***
-    rc = write(fd, bytes, 6);
-    if (rc < 0) {
-        std::cerr << "Error on write: " << rc << std::endl;
-    } else {
-        std::cout << "Write success: " << rc << std::endl;
-    }
-    std::cout << "Waiting for response..." << std::endl;
-    rc = read(fd, bytes, 2);
-    if (rc >= 1) {
-        std::cout << "Reply: " << (int)((bytes[0] << 8) | bytes[1]) << std::endl;
-    } else {
-        std::cerr << "Error on read: " << rc << std::endl;
-    }
 }

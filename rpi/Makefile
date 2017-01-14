@@ -45,6 +45,10 @@ SerialTest: $(BUILD)/SerialTest.o $(BUILD)/serial_setup.o
 	@mkdir -p $(BIN)
 	$(CXX) $(CXXFLAGS) -o $(BIN)/$@ $^
 
+SerialReadTest: $(BUILD)/SerialReadTest.o $(BUILD)/serial_setup.o
+	@mkdir -p $(BIN)
+	$(CXX) $(CXXFLAGS) -o $(BIN)/$@ $^
+
 # utility
 strip:
 	$(STRIP) $(BIN)/* 

@@ -33,9 +33,9 @@ int open_port(const char *port) {
 int setup_port(int fd) {
     struct termios tty;
     tty.c_cflag = TTYBAUDRATE | CS8 | CLOCAL | CREAD;
-    tty.c_iflag = IGNPAR | ICRNL;
+    tty.c_iflag = IGNPAR;
     tty.c_oflag = 0;
-    tty.c_lflag = ICANON;
+    tty.c_lflag = 0;
 
     tty.c_cc[VINTR]    = 0;     /* Ctrl-c */
     tty.c_cc[VQUIT]    = 0;     /* Ctrl-\ */
