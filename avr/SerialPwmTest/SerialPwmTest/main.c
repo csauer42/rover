@@ -23,9 +23,9 @@ void clearCommand(unsigned char[]);
 int main(void)
 {
 	unsigned char command[CLENGTH];
-	//unsigned char *ptr = command;
-	unsigned char retval = 0;
-	int i;
+	int cbuff;
+	unsigned short retval = 0;
+	int i = 0;
 	clearCommand(command);
     PWMInit();
 	setPWM(command);
@@ -33,17 +33,20 @@ int main(void)
 	
     while (1) 
     {
-		for (i = 0; i < 6; i++) {
-			command[i] = USART_receive();
-			retval += command[i];
+		cbuff = USART_receive();
+		command[i] = cbuff;
+		retval += cbuff;
+		i++;
+		if (i == 5) {
+			setPWM(command);
+			_delay_ms(20);
+			USART_send(retval >> 8);
+			USART_send(retval & 0xFF);
+			clearCommand(command);
+			retval = 0;
+			i = 0;
 		}
-		setPWM(command);
-		_delay_ms(10);
-		retval = retval / 6;
-		USART_send(retval);
-		clearCommand(command);
-		retval = 0;
-    }
+	}
 }
 
 void USART_init() {
