@@ -2,6 +2,7 @@
 #define SERIAL_SETUP_H
 
 #include <cstring>
+#include <cstdlib>
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <sys/file.h>
@@ -9,6 +10,7 @@
 #include <cstdio>
 #include <time.h>
 #include <unistd.h>
+#include <errno.h>
 
 /** @brief Library error codes */
 #define ERRLOPEN     -1

@@ -17,7 +17,7 @@ CXXFLAGS += -g
 CFLAGS += -g
 endif
 
-all: Intermediary SerialTest strip
+all: Intermediary SerialTest SerialReadTest SerialAutoTest strip
 
 
 test: $(TESTS)
@@ -46,6 +46,10 @@ SerialTest: $(BUILD)/SerialTest.o $(BUILD)/serial_setup.o
 	$(CXX) $(CXXFLAGS) -o $(BIN)/$@ $^
 
 SerialReadTest: $(BUILD)/SerialReadTest.o $(BUILD)/serial_setup.o
+	@mkdir -p $(BIN)
+	$(CXX) $(CXXFLAGS) -o $(BIN)/$@ $^
+
+SerialAutoTest: $(BUILD)/SerialAutoTest.o $(BUILD)/serial_setup.o
 	@mkdir -p $(BIN)
 	$(CXX) $(CXXFLAGS) -o $(BIN)/$@ $^
 

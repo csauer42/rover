@@ -13,7 +13,7 @@ int open_port(const char *port) {
         return ERRLLOCK;
     }
 
-    fd = open(port, O_RDWR | O_NOCTTY); // | O_NDELAY);
+    fd = open(port, O_RDWR | O_NOCTTY | O_SYNC); // | O_NDELAY);
     if (fd == -1) {
         return ERRPOPEN;
     } else {
@@ -32,32 +32,28 @@ int open_port(const char *port) {
 
 int setup_port(int fd) {
     struct termios tty;
-    tty.c_cflag = TTYBAUDRATE | CS8 | CLOCAL | CREAD;
-    tty.c_iflag = IGNPAR;
-    tty.c_oflag = 0;
-    tty.c_lflag = 0;
-
-    tty.c_cc[VINTR]    = 0;     /* Ctrl-c */
-    tty.c_cc[VQUIT]    = 0;     /* Ctrl-\ */
-    tty.c_cc[VERASE]   = 0;     /* del */
-    tty.c_cc[VKILL]    = 0;     /* @ */
-    tty.c_cc[VEOF]     = 4;     /* Ctrl-d */
-    tty.c_cc[VTIME]    = 5;    // was 0 /* inter-character timer unused */
-    tty.c_cc[VMIN]     = 1;     /* blocking read until 1 character arrives */
-    tty.c_cc[VSWTC]    = 0;     /* '\0' */
-    tty.c_cc[VSTART]   = 0;     /* Ctrl-q */
-    tty.c_cc[VSTOP]    = 0;     /* Ctrl-s */
-    tty.c_cc[VSUSP]    = 0;     /* Ctrl-z */
-    tty.c_cc[VEOL]     = 0;     /* '\0' */
-    tty.c_cc[VREPRINT] = 0;     /* Ctrl-r */
-    tty.c_cc[VDISCARD] = 0;     /* Ctrl-u */
-    tty.c_cc[VWERASE]  = 0;     /* Ctrl-w */
-    tty.c_cc[VLNEXT]   = 0;     /* Ctrl-v */
-    tty.c_cc[VEOL2]    = 0;     /* '\0' */
-
-    if (tcflush(fd, TCIFLUSH)) {
-        return ERRPFLUSH;
+ 
+    if (tcgetattr(fd, &tty) < 0) {
+	return ERRPFLUSH;
     }
+
+    cfsetospeed(&tty, (speed_t)TTYBAUDRATE);
+    cfsetispeed(&tty, (speed_t)TTYBAUDRATE);
+
+    tty.c_cflag |= (CLOCAL | CREAD);
+    tty.c_cflag &= ~CSIZE;
+    tty.c_cflag |= CS8;
+    tty.c_cflag &= ~PARENB;
+    tty.c_cflag &= ~CSTOPB;
+    tty.c_cflag &= ~CRTSCTS;
+
+    tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
+    tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+    tty.c_oflag &= ~OPOST;
+
+    tty.c_cc[VTIME]    = 1;    // was 0 /* inter-character timer unused */
+    tty.c_cc[VMIN]     = 1;     /* blocking read until 1 character arrives */
+
     if (tcsetattr(fd, TCSANOW, &tty)) {
         return ERRLUNLOCK;
     }

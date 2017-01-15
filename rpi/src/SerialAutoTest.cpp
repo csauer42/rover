@@ -9,13 +9,11 @@
 #include <iostream>
 #include "serial_setup.h"
 
-int getChannel();
-int getValue();
-void writeValue(int, int, int);
+void writeValue(uint8_t, int);
 
 int main(int argc, char** argv) {
     if (argc != 2) {
-        printf("Usage: ./SerialTest [port]\n");
+        printf("Usage: ./SerialAutoTest [port]\n");
         return -1;
     }
     // begin serial port setup
@@ -65,10 +63,11 @@ int main(int argc, char** argv) {
     // end serial port setup
 
     // begin main process
+    uint8_t seed = 0x10;
     while (1) {
-        int channel = getChannel();
-        int value = getValue();
-        writeValue(channel, value, fd);
+        writeValue(seed, fd);
+	seed += 0x10;
+	if (seed == 0xF0) seed = 0x10;
     }
     // end main process
 
@@ -85,34 +84,18 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-int getChannel() {
-    int channel;
-    std::cout << std::endl << "Select pwm channel:" << std::endl <<
-                              "1) OC0A" << std::endl <<
-                              "2) OC0B" << std::endl <<
-                              "3) OC1A" << std::endl <<
-                              "4) OC1B" << std::endl <<
-                              "5) OC2A" << std::endl <<
-                              "6) OC2B" << std::endl <<
-                              "? ";
-    std::cin >> channel;
-    return channel;
-}
-
-int getValue() {
-    int value;
-    std::cout << std::endl << "Input value (0-255): ";
-    std::cin >> value;
-    return value;
-}
-
-void writeValue(int channel, int value, int fd) {
+void writeValue(uint8_t seed, int fd) {
     int rc;
     unsigned char bytes[6];
     memset(bytes, 0, 6);
-    memset(bytes, 0, 1);
-    std::cout << std::endl << "Writing value " << value << " to channel " << channel << std::endl;
-    bytes[channel-1] = (value & 0xFF);
+
+    bytes[0] = seed;
+    bytes[1] = seed + 0x10;
+    bytes[2] = seed + 0x20;
+    bytes[3] = seed + 0x30;
+    bytes[4] = seed + 0x40;
+    bytes[5] = seed + 0x50;
+
     rc = write(fd, bytes, 6);
     if (rc < 0) {
         std::cerr << "Error on write: " << rc << std::endl;
