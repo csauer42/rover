@@ -14,7 +14,7 @@ void writeValue(uint8_t, int);
 
 int main(int argc, char** argv) {
     if (argc != 2) {
-        printf("Usage: ./SerialAutoTest [port]\n");
+        printf("Usage: ./SerialReqRep [port]\n");
         return -1;
     }
     // begin serial port setup
@@ -64,12 +64,12 @@ int main(int argc, char** argv) {
     // end serial port setup
 
     // begin main process
-    uint8_t seed = 0x10;
+    uint8_t seed = 0x01;
     while (1) {
         writeValue(seed, fd);
-	seed += 0x10;
-	if (seed == 0xF0) seed = 0x10;
-        sleep(2);
+	seed++;
+	if (seed == 0xFE) seed = 0x01;
+        usleep(50000);
     }
     // end main process
 
@@ -88,33 +88,24 @@ int main(int argc, char** argv) {
 
 void writeValue(uint8_t seed, int fd) {
     int rc;
-    short int sum = 0;
-    unsigned char bytes[6];
-    memset(bytes, 0, 6);
+    unsigned char bytes[1];
+    memset(bytes, 0, 1);
 
     bytes[0] = seed;
-    bytes[1] = seed + 0x10;
-    bytes[2] = seed + 0x20;
-    bytes[3] = seed + 0x30;
-    bytes[4] = seed + 0x40;
-    bytes[5] = seed + 0x50;
 
-    for (int i = 0; i < 6; i++) {
-        sum += bytes[i];
-    }
-
-    rc = write(fd, bytes, 6);
+    rc = write(fd, bytes, 1);
     if (rc < 0) {
         std::cerr << "Error on write: " << rc << std::endl;
+        return;
     } else {
-        std::cout << "Write success: " << rc << std::endl;
+        std::cout << "Write success: " << rc << " Sent: " << (int)seed << std::endl;
     }
     tcdrain(fd);
     std::cout << "Waiting for response..." << std::endl;
-    rc = read(fd, bytes, 2);
+    rc = read(fd, bytes, 1);
     if (rc >= 1) {
-        std::cout << "Reply: " << (int)((bytes[0] << 8) | bytes[1]) << " Expected reply: " << sum << std::endl;
+        std::cout << "Reply: " << (int)bytes[0] << " Expected reply: " << seed+1 << std::endl << std::endl;
     } else {
-        std::cerr << "Error on read: " << rc << std::endl;
+        std::cerr << "Error on read: " << rc << std::endl << std::endl;
     }
 }
