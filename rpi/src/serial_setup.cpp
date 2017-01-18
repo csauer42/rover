@@ -31,6 +31,7 @@ int open_port(const char *port) {
 }
 
 int setup_port(int fd) {
+    // use cfmakeraw() ?
     struct termios tty;
  
     if (tcgetattr(fd, &tty) < 0) {
@@ -40,20 +41,21 @@ int setup_port(int fd) {
     cfsetospeed(&tty, (speed_t)TTYBAUDRATE);
     cfsetispeed(&tty, (speed_t)TTYBAUDRATE);
 
-    tty.c_cflag |= (CLOCAL | CREAD);
+    tty.c_cflag |= (CLOCAL | CREAD); // unnecessary?
     tty.c_cflag &= ~CSIZE;
     tty.c_cflag |= CS8;
     tty.c_cflag &= ~PARENB;
-    tty.c_cflag &= ~CSTOPB;
+    //tty.c_cflag &= ~CSTOPB; // defaults to off/covered by CS8
     tty.c_cflag &= ~CRTSCTS;
 
     tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
     tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
     tty.c_oflag &= ~OPOST;
 
-    tty.c_cc[VTIME]    = 1;    // was 0 /* inter-character timer unused */
+    tty.c_cc[VTIME]    = 10;    // 1 second inter-character timer
     tty.c_cc[VMIN]     = 1;     /* blocking read until 1 character arrives */
 
+    tcflush(fd, TCIFLUSH);
     if (tcsetattr(fd, TCSANOW, &tty)) {
         return ERRLUNLOCK;
     }

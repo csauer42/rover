@@ -14,7 +14,8 @@
 #include "crc.h"
 
 void writeValue(uint8_t, int);
-void writeCRC(unsigned char c[]); 
+void writeCRC(uint8_t c[]); 
+void printMessage(uint8_t c[], int size);
 
 int main(int argc, char** argv) {
     if (argc != 2) {
@@ -73,7 +74,6 @@ int main(int argc, char** argv) {
         writeValue(seed, fd);
 	seed += 0x10;
 	if (seed == 0xF0) seed = 0x10;
-        //sleep(1);
         usleep(250000);
     }
     // end main process
@@ -94,8 +94,8 @@ int main(int argc, char** argv) {
 void writeValue(uint8_t seed, int fd) {
     int rc;
     short int sum = 0;
-    unsigned char bytes[9];
-    memset(bytes, 0, 9);
+    uint8_t bytes[11]; // START (1) + motor (1*4) + servo (2*2) + CRC (2)
+    memset(bytes, 0, 11);
 
     bytes[0] = 0xFF;
     bytes[1] = seed;
@@ -104,49 +104,47 @@ void writeValue(uint8_t seed, int fd) {
     bytes[4] = seed + 0x30;
     bytes[5] = seed + 0x40;
     bytes[6] = seed + 0x50;
+    bytes[7] = seed + 0x60;
+    bytes[8] = seed + 0x70;
+    // bytes[9], bytes[10] for crc
 
-    for (int i = 1; i < 7; i++) {
+    for (int i = 1; i < 9; i++) {
         sum += bytes[i];
     }
     writeCRC(bytes);
 
-    rc = write(fd, bytes, 9);
+    rc = write(fd, bytes, 11);
     if (rc < 0) {
         std::cerr << "Error on write: " << rc << std::endl;
     } else {
-        std::cout << "Write success: " << rc << " | " << (int)((bytes[7] << 8) | bytes[8]) 
-                  << " | " << std::hex << (int)bytes[7] << " | " << std::hex << (int)bytes[8] 
-                  << std::dec << std::endl;
-        for (int i = 0; i < 9; i++) {
-            printf("%02X ", bytes[i]);            
-        }
-        printf("\n");
+        std::cout << "Write success: " << std::endl;
+        printMessage(bytes, 11);
     }
     tcdrain(fd);
-    memset(bytes, 0, 9);
+    memset(bytes, 0, 11);
     std::cout << "Waiting for response..." << std::endl;
-    rc = read(fd, bytes, 9);
-    if (rc == 9) {
-        //std::cout << "Reply: " << (int)((bytes[0] << 8) | bytes[1]) << " Expected reply: " 
-        //          << sum << std::endl << std::endl;
+    rc = read(fd, bytes, 11);
+    if (rc == 11) {
         std::cout << "Reply:" << std::endl;
-        std::cout << std::hex; 
-        for (int i = 0; i < 9; i++) {
-            std::cout << std::uppercase << std::setfill('0') << std::setw(2) << (int)bytes[i] << " ";
-        }
-        std::cout << std::dec << std::endl << std::endl;
+        printMessage(bytes, 11);
     } else {
         std::cerr << "Error on read: " << rc << std::endl;
-        std::cout << std::hex;
-        for (int i = 0; i < rc; i++) {
-            std::cout << std::uppercase << std::setfill('0') << std::setw(2) << (int)bytes[i] << " ";
-        }
-        std::cout << std::dec << std::endl << std::endl;
+        printMessage(bytes, 11);
     }
+    std::cout << std::endl;
 }
 
-void writeCRC(unsigned char c[]) {
-    uint16_t crc = calculate_crc16(c, 7);
-    c[7] = (crc & 0xFF);
-    c[8] = (crc >> 8);
-} 
+void writeCRC(uint8_t c[]) {
+    uint16_t crc = calculate_crc16(c, 9);
+    c[9] = (crc & 0xFF);
+    c[10] = (crc >> 8);
+}
+
+void printMessage(uint8_t c[], int size) {
+        std::cout << std::hex; 
+        for (int i = 0; i < size; i++) {
+            std::cout << std::uppercase << std::setfill('0') << std::setw(2) << (int)c[i] << " ";
+        }
+        std::cout << std::dec << std::endl;
+}
+
