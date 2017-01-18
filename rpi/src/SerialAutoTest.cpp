@@ -11,6 +11,7 @@
 #include <cstdio>
 #include <iomanip>
 #include "serial_setup.h"
+#include "crc.h"
 
 void writeValue(uint8_t, int);
 void writeCRC(unsigned char c[]); 
@@ -145,11 +146,7 @@ void writeValue(uint8_t seed, int fd) {
 }
 
 void writeCRC(unsigned char c[]) {
-    uint16_t crc = 0x0000;
-    for (int i=1; i < 7; i++) {
-        //crc ^= (c[i] << i);
-        crc += c[i];
-    }
-    c[7] = (crc >> 8);
-    c[8] = (crc & 0xFF);
-}
+    uint16_t crc = calculate_crc16(c, 7);
+    c[7] = (crc & 0xFF);
+    c[8] = (crc >> 8);
+} 

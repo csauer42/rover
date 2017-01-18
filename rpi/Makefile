@@ -49,7 +49,7 @@ SerialReadTest: $(BUILD)/SerialReadTest.o $(BUILD)/serial_setup.o
 	@mkdir -p $(BIN)
 	$(CXX) $(CXXFLAGS) -o $(BIN)/$@ $^
 
-SerialAutoTest: $(BUILD)/SerialAutoTest.o $(BUILD)/serial_setup.o
+SerialAutoTest: $(BUILD)/SerialAutoTest.o $(BUILD)/serial_setup.o $(BUILD)/crc.o
 	@mkdir -p $(BIN)
 	$(CXX) $(CXXFLAGS) -o $(BIN)/$@ $^
 
