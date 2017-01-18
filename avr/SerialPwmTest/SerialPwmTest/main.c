@@ -13,6 +13,7 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
+#include <util/crc16.h>
 
 void USART_init();
 void USART_send(unsigned char);
@@ -44,14 +45,12 @@ int main(void)
 				sum += cbuff;
 				count++;
 				if (count == 8) {
-					if (CRCcheck(command) == 1) {
+					if (CRCcheck(command) == 0) {
 						setPWM(command);
 						for (int i = 0; i < CLENGTH; i++) {
 							USART_send(command[i]);
 						}
 						clearCommand(command);
-						//USART_send(sum >> 8);
-						//USART_send(sum & 0xFF);
 						break;
 					} else {
 						for (int i = 0; i < CLENGTH; i++) {
@@ -127,14 +126,9 @@ void setPWM(unsigned char c[]) {
 }
 
 int CRCcheck(unsigned char c[]) {
-	uint16_t crc = 0x0000;
-	// this is a fake crc
-	for (int i = 1; i < (CLENGTH-2); i++) {
-		//crc ^= (c[i] << i);
-		crc += c[i];
+	uint16_t crc = 0xFFFF;
+	for (int i = 1; i < (CLENGTH); i++) {
+		crc = _crc16_update(crc, c[i]);
 	}
-	//if (((crc >> 8) == c[7]) && ((crc & 0xFF) == c[8])) {
-	return 1;
-	//}
-    //return 0;
+	return crc;
 }
