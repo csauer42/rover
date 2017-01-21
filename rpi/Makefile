@@ -17,10 +17,7 @@ CXXFLAGS += -g
 CFLAGS += -g
 endif
 
-all: SerialTest SerialReadTest SerialAutoTest SerialReqRep strip
-
-
-test: $(TESTS)
+all: Intermediary SerialTest SerialReadTest SerialAutoTest SerialReqRep interop strip
 
 # object build
 $(BUILD)/%.o: $(SRC)/%.$(EXTCXX)
@@ -37,9 +34,18 @@ $(BUILD)/%.lo: $(SRC)/%.cpp
 
 # main targets
 
-Intermediary: $(BUILD)/Intermediary.o
+Intermediary: $(BUILD)/Intermediary.o $(BUILD)/Rover.o $(BUILD)/serial_setup.o \
+              $(BUILD)/crc.o $(BUILD)/serial_comms.o $(BUILD)/conversion.o
 	@mkdir -p $(BIN)
-	$(CXX) $(CXXFLAGS) -o $(BIN)/$@ $< -lzmq
+	$(CXX) $(CXXFLAGS) -o $(BIN)/$@ $^ -lzmq
+
+conversiontest: $(BUILD)/conversiontest.o
+	@mkdir -p $(BIN)
+	$(CXX) $(CXXFLAGS) -o $(BIN)/$@ $^
+
+interop: $(BUILD)/interop.o
+	@mkdir -p $(BIN)
+	$(CXX) $(CXXFLAGS) -o $(BIN)/$@ $^ -lzmq
 
 SerialTest: $(BUILD)/SerialTest.o $(BUILD)/serial_setup.o
 	@mkdir -p $(BIN)

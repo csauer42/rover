@@ -74,7 +74,8 @@ int main(int argc, char** argv) {
         writeValue(seed, fd);
 	seed += 0x10;
 	if (seed == 0xF0) seed = 0x10;
-        usleep(250000);
+        //sleep(1);
+        usleep(500000);
     }
     // end main process
 
@@ -102,10 +103,16 @@ void writeValue(uint8_t seed, int fd) {
     bytes[2] = seed + 0x10;
     bytes[3] = seed + 0x20;
     bytes[4] = seed + 0x30;
-    bytes[5] = seed + 0x40;
-    bytes[6] = seed + 0x50;
-    bytes[7] = seed + 0x60;
-    bytes[8] = seed + 0x70;
+    uint8_t servo = 0x00;
+    if (seed > 0xA0) {
+        servo = 0xFF;
+    }
+
+    bytes[5] = servo;
+    bytes[6] = servo;
+    bytes[7] = ~servo;
+    bytes[8] = ~servo;
+    
     // bytes[9], bytes[10] for crc
 
     for (int i = 1; i < 9; i++) {
@@ -121,6 +128,7 @@ void writeValue(uint8_t seed, int fd) {
         printMessage(bytes, 11);
     }
     tcdrain(fd);
+    usleep(100000);
     memset(bytes, 0, 11);
     std::cout << "Waiting for response..." << std::endl;
     rc = read(fd, bytes, 11);
