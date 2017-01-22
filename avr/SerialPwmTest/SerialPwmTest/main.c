@@ -6,7 +6,7 @@
  */ 
 
 #define F_CPU 8000000UL
-#define BAUDRATE 9600
+#define BAUDRATE 38400
 #define BAUD_PRESCALLER (((F_CPU / (BAUDRATE * 16UL))) - 1)
 #define CLENGTH 11
 #define START 0xFF
