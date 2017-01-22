@@ -52,10 +52,12 @@ int setup_port(int fd) {
     tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
     tty.c_oflag &= ~OPOST;
 
-    tty.c_cc[VTIME]    = 10;    // 1 second inter-character timer
-    tty.c_cc[VMIN]     = 1;     /* blocking read until 1 character arrives */
+    tty.c_cc[VTIME]    = 2;    /* non-blocking read w/ 0.2 s timeout */
+    tty.c_cc[VMIN]     = 0;
 
     tcflush(fd, TCIFLUSH);
+    tcflush(fd, TCOFLUSH);
+
     if (tcsetattr(fd, TCSANOW, &tty)) {
         return ERRLUNLOCK;
     }

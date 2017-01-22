@@ -3,6 +3,7 @@
 float writeCommand(uint8_t c[], int fd) {
     int rc;
     uint8_t vret[2];
+    tcflush(fd, TCIFLUSH);
 
     rc = write(fd, c, CLENGTH);
     if (rc < 0) {

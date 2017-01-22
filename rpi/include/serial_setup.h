@@ -27,7 +27,7 @@
 /** @brief Serial port lock file name */
 #define LOCKNAME "/tmp/serial_lock"
 /** @brief Baudrate for ftdi serial connection */
-#define TTYBAUDRATE B9600
+#define TTYBAUDRATE B38400
 
 /** @brief Serial port lock file descriptor */
 //int lock_file;

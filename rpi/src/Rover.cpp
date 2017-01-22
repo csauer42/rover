@@ -34,14 +34,14 @@ void Rover::run() {
         if (request.size()/sizeof(int) == 4) {
             convertValues((int*)request.data(), command);
 ///////// start debug
-            for (int i = 0; i < CLENGTH; i++) {
-                std::cout << std::hex << std::setfill('0') << std::setw(2) << (int)command[i] << " ";
-            }
-            std::cout << std::dec << std::endl;
+//          for (int i = 0; i < CLENGTH; i++) {
+//              std::cout << std::hex << std::setfill('0') << std::setw(2) << (int)command[i] << " ";
+//          }
+//          std::cout << std::dec << std::endl;
 ///////// end debug
             voltageReturn = writeCommand(command, serialfd); // reply error or voltage
 ///////// start debug
-            std::cout << "Voltage returned: " << voltageReturn << std::endl;
+//          std::cout << "Voltage returned: " << voltageReturn << std::endl;
 ///////// end debug            
         }
         zmq::message_t response(4);
