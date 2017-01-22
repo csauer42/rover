@@ -1,9 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 from jsconverter import JSConverter
 from time import sleep
 
-device = '/dev/input/event16'
+device = '/dev/input/event22'
 
 jsc = JSConverter(device)
 
