@@ -7,26 +7,31 @@ pan-tilt module for independent look control (+/- 90 degrees vertical and horizo
 Powered by 7 AA NiMH batteries providing 8.4 volts to DC motors via L293 H-bridge and 5 volts to the rest 
 of the circuit using a LM2575T-5.0 1A switching regulator.
 
-Code:
+## Repository Contents
 
-avr/
+### avr
 
 Atmel Studio 7 project for ATMega328P motor control code.  Converts serial message
-to motor control values on PWM pins, reads battery voltage with ADC pin.
+to motor control values on PWM pins.  Also reads battery voltage with ADC pin.
 
-controller/
+### controller
 
 Python application for converting gamepad input to 4 integer values, trasmitted
 over ZeroMQ REQ/REP socket to Raspberry Pi.  Display raw h.264 feed from Pi and
 battery voltage from AVR. 
 
-rpi/
+### rpi
 
-1) ZeroMQ<->UART interface, converts 4-integer values to 11-byte UART command w/ CRC, replies 
+1. ZeroMQ<->UART interface, converts 4-integer values to 11-byte UART command w/ CRC, replies 
 with voltage.  
-2) raspivid piped to netcat for raw h.264 video stream using hardware encoder
+2. raspivid piped to netcat for raw h.264 video stream using hardware encoder
 
-Electrical schematics made with gEDA.
+### schematics
 
-Dependencies:
-python, evdev, ZeroMQ, avr-libc
+Electrical schematics and pcb layout files made with gEDA.
+
+## Dependencies:
+* python3
+* python3-evdev
+* ZeroMQ
+* avr-libc
