@@ -1,0 +1,16 @@
+(1) LM2575T voltage converter
+(1) ATMega 328P microcontroller
+(1) L293 H-bridge motor driver
+(1) 2-pin screw terminal
+(1) 4-pin screw terminal
+(1) 2x3 header
+(1) 1x4 header
+(2) 0.1uf ceramic capacitors
+(1) 100uf electrolytic capacitor
+(2) 330uf electrolytic capacitors
+(1) 330uh inductor
+(1) 1N5819 diode
+(5) 1k resistor
+(1) 2k resistor
+(3) 10k resistor
+(2) 2N2222 transistor
