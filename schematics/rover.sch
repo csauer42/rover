@@ -501,7 +501,7 @@ refdes=Q1
 T 54000 44000 5 10 0 0 0 0 1
 value=2N2222
 T 54000 44000 5 10 0 0 0 0 1
-footprint=TO92
+footprint=TO92R
 T 54000 44000 5 10 0 0 0 0 1
 numslots=1
 T 54000 44000 5 10 0 0 0 0 1
@@ -518,7 +518,7 @@ refdes=Q2
 T 56000 44500 5 10 0 0 0 0 1
 value=2N2222
 T 56000 44500 5 10 0 0 0 0 1
-footprint=TO92
+footprint=TO92R
 T 56000 44500 5 10 0 0 0 0 1
 numslots=1
 T 56000 44500 5 10 0 0 0 0 1
@@ -721,7 +721,7 @@ device=CONNECTOR_2
 T 41500 50400 5 10 1 1 270 0 1
 refdes=CONN1
 T 40700 50400 5 10 0 0 0 0 1
-footprint=screw_5mm_2
+footprint=terminalblock2
 }
 C 56500 43400 1 180 0 connector4-1.sym
 {
@@ -754,7 +754,7 @@ refdes=D1
 T 44700 48200 5 10 0 0 0 0 1
 value=1N5819
 T 44700 48200 5 10 0 0 0 0 1
-footprint=ACY400P
+footprint=ACY400PR
 }
 C 55500 43700 1 0 0 ground.sym
 C 47300 44000 1 0 0 ground.sym
