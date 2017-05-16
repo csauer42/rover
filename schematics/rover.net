@@ -15,8 +15,8 @@ unnamed_net9	U3-10 U2-5
 unnamed_net8	U3-7 U2-11 
 unnamed_net7	U3-2 U2-12 
 unnamed_net6	R3-1 R2-2 U2-28 
-unnamed_net5	CONN3-1 U2-15 
-unnamed_net4	CONN3-2 U2-16 
+unnamed_net5	CONN3-2 U2-15 
+unnamed_net4	CONN3-1 U2-16 
 unnamed_net3	U3-15 U2-17 
 GND	CONN3-5 CONN3-6 C5-2 R3-2 CONN4-2 R5-1 Q2-3 Q1-3 CONN1-2 C1-2 U1-5 D1-1 C2-2 U1-3 U3-12 U3-13 U3-5 U3-4 C3-1 C4-1 U2-22 U2-8 
 unnamed_net2	CONN3-4 CONN3-3 C5-1 R8-1 R7-2 CONN4-1 L1-2 C2-1 U1-4 U2-20 C3-2 R1-1 U3-16 U3-1 U3-9 C4-2 U2-7 
