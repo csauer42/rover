@@ -5,7 +5,7 @@ void signalHandler(int);
 Rover *rptr;
 
 int main() {
-    const char *tty = "/dev/ttyUSB0";
+    const char *tty = "/dev/ttyAMA0";
     signal(SIGINT, signalHandler);
     signal(SIGTERM, signalHandler);
     Rover rover = Rover(tty);
