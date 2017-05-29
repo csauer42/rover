@@ -4,8 +4,8 @@ Raspberry Pi Zero using Redbear IoT HAT
 -5V power input
 -UART/SPI connection to AVR
     -3V3 to 5V interface requires additional components for connection
--Pi Camera connected via camera port for access to BCM2835 H.264 hardware encoder
+-Pi Camera connected via camera port for v4l2 control
 
-Application 1: h.264 streaming via socket server (off the shelf application?)
-Application 2: socket server with serial read/write, passes control codes and battery voltage between
-               avr and controller application (use zeroMQ)
+start_video.sh: video setup and mpeg streaming via socket 
+Intermediary:   socket server with serial read/write, passes control codes and battery voltage between
+                avr and controller application (use zeroMQ)

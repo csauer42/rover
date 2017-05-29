@@ -1,0 +1,10 @@
+[Unit]
+Description=Rpi Camera Feed
+
+[Service]
+Type=simple
+ExecStart=/home/pi/rover/rpi/scripts/start_video.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
