@@ -2,6 +2,7 @@ avr/bin
 avr/build
 rpi/bin
 rpi/build
+controller/output
 *.swp
 */__pycache__
 *Debug*

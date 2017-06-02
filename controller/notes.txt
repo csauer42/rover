@@ -1,12 +1,14 @@
-Rover Controller Python Application on PC
+Rover Controller Python Application on (Linux*) PC
 
 -wifi connection to rover in access point mode
 -displays video stream from camera
--reads input from gamepad, converts to control code, sends to socket
--reads reply from RPi socket server, displays battery voltage/low voltage warning
+-reads input from gamepad, converts to control code, sends to zmq socket (REQ-REP pattern)
+-reads reply from RPi zmq server, displays battery voltage/low voltage warning
 
-Python librarys for 
-  gui: ?
-  gamepad: pygame
-  display: ?
+Python librarys: 
+  pygame
+  opencv
+  zmq
 
+*Designed and tested on Arch Linux.  Application should work cross-platform
+with minimal adjustments.
