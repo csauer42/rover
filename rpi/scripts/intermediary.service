@@ -1,0 +1,10 @@
+[Unit]
+Description=Rpi Control IO
+
+[Service]
+Type=simple
+ExecStart=/home/pi/rover/rpi/bin/Intermediary
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
