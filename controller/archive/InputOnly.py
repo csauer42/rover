@@ -8,10 +8,10 @@ from time import sleep
 sock = 7500
 ip = '192.168.0.104'
 
-#context = zmq.Context()
+context = zmq.Context()
 
-#socket = context.socket(zmq.REQ)
-#socket.connect("tcp://%s:%d" % (ip, sock))
+socket = context.socket(zmq.REQ)
+socket.connect("tcp://%s:%d" % (ip, sock))
 
 device = '/dev/input/event23'
 
@@ -27,16 +27,16 @@ while True:
             print(values)
             request = struct.pack("<iiii", *values)
             print("Sending: %s" % str(values))
-            #socket.send(request)
-            #reply = socket.recv()
+            socket.send(request)
+            reply = socket.recv()
             previous = values
-            #print("Return value: %0.2f" % struct.unpack("<f", reply)[0])
-            #sleep(0.25)
+            print("Return value: %0.2f" % struct.unpack("<f", reply)[0])
+            sleep(0.25)
     except KeyboardInterrupt:
         break
 
 print()
 jsc.active = False
-#socket.close()
+socket.close()
 jsc.join()
 print("OK")

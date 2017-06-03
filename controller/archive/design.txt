@@ -1,0 +1,59 @@
+main thread:
+pygame w/ viewer window
+    create directories for video, stills
+    get events
+    capture buttons:
+        set capture variables
+    if js event & not sending:
+        write w/ zmq thread
+    ( if analog sticks are not events, use get_axis here )
+    write additional text data to screen
+
+    display frame buffer
+    clock(24)
+
+zmq i/o:
+gamepad conversion and controller <-> rpi comms
+    accept values from main thread
+    write to zmq socket
+    write response to main thread variable
+
+socket read:
+raw video data listen and convert
+    read from video socket
+    convert from raw mpeg -> BGR (future rev: apply filter/search) -> RGB (resized?)
+    if screenshot button is pressed, write still image to file (autoincrement names)
+    if video capture button is pressed, record/stop to video file (h.264, autoincrement names)
+    write converted frames to frame buffer
+
+(lock frame buffer, js values, battery voltage on read/write)
+
+state information:
+    -video socket connected
+    -zmq socket connected
+    -gamepad connected
+    -messages (Initializing, Connecting to Video Feed, Connecting to Control Interface)
+
+alternate input:
+    wasd: move
+    arrows: look
+    space: zero move
+    enter: zero look
+
+global / thread variables:
+    last js position
+    current js position
+    next frame (semaphore?)
+    battery voltage
+    still capture on next frame
+    record video (boolean)
+   
+
+copy aggregator.py thread layout
+    (main thread in main(), spawns own subthreads?)
+
+run main with ip argument
+
+./rover-control.py 192.168.0.104
+
+cleanup method for clean disconnection
