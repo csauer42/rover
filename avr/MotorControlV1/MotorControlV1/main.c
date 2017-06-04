@@ -109,7 +109,7 @@ void clearCommand(uint8_t c[]) {
 void setPWM(uint8_t c[]) {
 	// motor forward l/r
 	OCR0A = c[1];
-	OCR0B = c[2];
+	OCR2A = c[2];
 
     // servo vert/horiz	
 	uint16_t look_vertical = (c[5] << 8) | c[6];
@@ -118,18 +118,18 @@ void setPWM(uint8_t c[]) {
 	OCR1B = ICR1 * (1.0 + (look_horizontal/1023.0)) / 20;
 	
 	// motor backward l/r
-	OCR2A = c[3];
+	OCR0B = c[3];
 	OCR2B = c[4];
 }
 
 void zeroAll() {
 	OCR0A = 0;
-	OCR0B = 0;
+	OCR2A = 0;
 	
 	OCR1A = ICR1 * 1.5 / 20;
 	OCR1B = ICR1 * 1.5 / 20;
 	
-	OCR2A = 0;
+	OCR0B = 0;
 	OCR2A = 0;
 }
 
