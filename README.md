@@ -17,21 +17,31 @@ to motor control values on PWM pins.  Also reads battery voltage with ADC pin.
 ### controller
 
 Python application for converting gamepad input to 4 integer values, trasmitted
-over ZeroMQ REQ/REP socket to Raspberry Pi.  Display raw h.264 feed from Pi and
-battery voltage from AVR. 
+over ZeroMQ REQ/REP socket to Raspberry Pi.  Display MPEG feed from Pi Camera and
+battery voltage from AVR.  Allows snapshots and video recording on controller device. 
 
 ### rpi
 
 1. ZeroMQ<->UART interface, converts 4-integer values to 11-byte UART command w/ CRC, replies 
 with voltage.  
-2. raspivid piped to netcat for raw h.264 video stream using hardware encoder
+2.  /dev/video0 (RPi Camera configured with l4v2-ctl) piped to netcat for MPEG video stream.
 
 ### schematics
 
-Electrical schematics and pcb layout files made with gEDA.
+MotorControl board handles interfacing RPi control of dc and servo motors through AVR via PWM outputs, 
+voltage conversion from battery to 5v, and level shifting between 3.3V and 5V for UART communication 
+between AVR and RPi. 
+
+Electrical schematics and pcb layout files made with gEDA. Board ordered from [OSH Park](http://oshpark.com).
+
+Version 1 tested and functional, though some holes should be enlarged in version 2 (LM2575, 4-pin terminal block, 
+L293D, 1N5819).
 
 ## Dependencies:
 * python3
-* python3-evdev
+* pygame
+* opencv
+* numpy
 * ZeroMQ
 * avr-libc
+* v4l2-utils (for v4l2-ctl)

@@ -3,6 +3,10 @@ import zmq
 import struct
 from time import sleep
 
+VCOUNT = 5 # circular buffer size for voltage readings
+TIMEOUT = 3000
+SLEEPTIME = 0.25
+
 class ControlIO(Thread):
     def __init__(self, host, port = 7500):
         Thread.__init__(self)
@@ -11,7 +15,7 @@ class ControlIO(Thread):
         self.rlock = Lock()
         self.vlock = Lock()
         self.ready = True
-        self.voltage = [0.0, 0.0, 0.0, 0.0, 0.0]
+        self.voltage = [0.0] * VCOUNT
         self.v_index = 0
         self.active = True
         self.nextRequest = None
@@ -30,20 +34,20 @@ class ControlIO(Thread):
                         reply = self.socket.recv()
                         with self.vlock:
                             self.voltage[self.v_index]  = struct.unpack("<f", reply)[0]
-                            self.v_index = (self.v_index + 1) % 5
+                            self.v_index = (self.v_index + 1) % VCOUNT
                         self.lastRequest = self.nextRequest
                         self.nextRequest = None
                     except:
                         print("Error in recv block")
                     self.ready = True
-            else:
-                sleep(0.25)
+            #else:
+            #    sleep(SLEEPTIME)
         self.cleanup()
 
     def setup(self):
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REQ)
-        self.socket.RCVTIMEO = 3000
+        self.socket.RCVTIMEO = TIMEOUT
         self.socket.connect("tcp://%s:%d" % (self.host, self.port))
 
     def cleanup(self):
@@ -56,7 +60,7 @@ class ControlIO(Thread):
 
     def get_voltage(self):
         with self.vlock:
-            return sum(self.voltage) / 5.0
+            return sum(self.voltage) / VCOUNT
 
     def is_ready(self):
         return self.ready

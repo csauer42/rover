@@ -1,16 +1,35 @@
 (1) LM2575T voltage converter
-(1) ATMega 328P microcontroller
+(1) ATMega 328P microcontroller (DIP 28)
+(1) 28-pin DIP socket
 (1) L293 H-bridge motor driver
-(1) 2-pin screw terminal
-(1) 4-pin screw terminal
+(1) 2-pin screw terminal (2.54mm pitch)
+(1) 4-pin screw terminal (2.54mm pitch)
 (1) 2x3 header
 (1) 1x4 header
-(2) 0.1uf ceramic capacitors
-(1) 100uf electrolytic capacitor
-(2) 330uf electrolytic capacitors
-(1) 330uh inductor
+(2) 0.1uF ceramic capacitors
+(1) 100uF electrolytic capacitor
+(2) 330uF electrolytic capacitors
+(1) 330uH inductor
 (1) 1N5819 diode
-(5) 1k resistor
-(1) 2k resistor
-(3) 10k resistor
+(5) 1K resistor
+(1) 2K resistor
+(3) 10K resistor
 (2) 2N2222 transistor
+
+Resistor/Capacitor Designations:
+
+R1: 10K
+R2: 10K
+R3: 10K
+R4: 1K
+R5: 2K (2.2K used)
+R6: 1K
+R7: 1K
+R8: 1K
+R9: 1K
+
+C1: 100 uF
+C2: 330 uF
+C3: 0.1 uF
+C4: 0.1 uF
+C5: 330 uF

@@ -1,11 +1,22 @@
 Raspberry Pi Zero using Redbear IoT HAT
-(IoT HAT uses UART pins for Bluetooth, either bypass Bluetooth or use SPI connection to AVR)
+(IoT HAT uses UART pins for Bluetooth, either disable Bluetooth and serial
+ console to enable MotorControl communication)
 
 -5V power input
--UART/SPI connection to AVR
-    -3V3 to 5V interface requires additional components for connection
--Pi Camera connected via camera port for v4l2 control
+-UART connection to AVR
+    -3V3 to 5V level shifting handled on MotorControl board
+-Pi Camera connected via camera port with v4l2 control
+ (load bcm2835-v4l2 module at startup to provide /dev/video0)
 
 start_video.sh: video setup and mpeg streaming via socket 
 Intermediary:   socket server with serial read/write, passes control codes and battery voltage between
-                avr and controller application (use zeroMQ)
+                avr and controller application (uses ZeroMQ REP-REQ socket)
+
+Intermediary must be compiled and is dependent on ZMQ (v4.0+) and ZeroMQ C++ bindings, both available
+in https://github.com/zeromq/ (libzmq and cppzmq, respectively).  The version available as a Raspbian 
+package is not compatible.
+
+systemd service files located in scripts directory, by default point to correct paths if repository is
+cloned into pi user's home directory.  camera.service will configure and start video streaming on port 5001.
+intermediary.service will start the Intermediary processes to pass control codes and voltage between the
+AVR chip and the controller application.

@@ -1,0 +1,18 @@
+AVR Motor Control
+
+Receives 7-byte control message for motor positions:
+
+[FF]    [XX]   [XX]   [XX]   [XX]   [XX]   [XX]   [XX]   [XX] 
+start   motor  motor  motor  motor  servo  servo  <--crc_16-->
+byte    left   right  left   right  pan    tilt
+        fw     fw     bw     bw
+
+Responds with 10-bit ADC value in 2-byte message.
+
+Fuse Settings:
+
+
+
+
+Written for Atmel ATMega328P using Atmel Studio 7.  Pin selection
+matches MotorControl schematic.

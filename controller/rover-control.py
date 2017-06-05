@@ -7,6 +7,11 @@ from videoreceiver import VideoReceiver
 from controlio import ControlIO
 import sys
 
+# todo:  refactor control into class
+#        test double framerate on display
+
+FPS = 24
+
 def js_convert(pos_list):
     MLIMITLOW = 32
     LLIMITLOW = 96
@@ -101,7 +106,7 @@ def main():
         gamepad_position(gamepad_values, screen)
         battery_voltage(cio.get_voltage(), screen)
         pygame.display.flip()
-        clock.tick(24)
+        clock.tick(FPS)
 
     video_receiver.active = False
     cio.active = False
