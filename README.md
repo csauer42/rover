@@ -7,7 +7,7 @@ voltage monitor.  Camera mounted on micro-servo pan-tilt module for independent 
 degrees vertical and horizontal from straight ahead). Powered by 7 AA NiMH batteries providing ~8.4 volts 
 to DC motors via L293 H-bridge and 5 volts to the rest of the circuit using a LM2575T-5.0 1A switching regulator.
 
-![Rover side view](http://i.imgur.com/s8KuVWz.jpg =150x) ![Rover front view](http://i.imgur.com/gCrFFxG.jpg =150x)
+<img src="http://i.imgur.com/s8KuVWz.jpg" alt="Rover side view" style="width:300px"><img src="http://i.imgur.com/gCrFFxG.jpg" alt="Rover front view" style="width:300px">
 
 ## Repository Contents
 (additional notes are provided in each directory)
