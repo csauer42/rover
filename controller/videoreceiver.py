@@ -5,6 +5,7 @@ import numpy as np
 import pygame
 import os
 
+# to do: video recording
 # alternate video: write raw frames as binary data w/o conversion
 
 FPS = 24.0
@@ -58,7 +59,8 @@ class VideoReceiver(Thread):
             os.makedirs(self.path)
         # check for existing screenshots, set id number
         # check for existing videos, set id number
-        self.vout = cv2.VideoWriter(self.vid_name, cv2.VideoWriter_fourcc(*'XVID'), FPS, SCREEN_SIZE)
+        #fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        #self.vout = cv2.VideoWriter(self.vid_name, fourcc, FPS, SCREEN_SIZE)
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect((self.host, self.port))
         self.buff += self.client.recv(self.buffsize)

@@ -10,13 +10,13 @@ import sys
 # todo:  refactor control into class
 #        test double framerate on display
 
-FPS = 24
+FPS = 48
 
 def js_convert(pos_list):
     MLIMITLOW = 32
     LLIMITLOW = 96
     c0 = int(pos_list[0] * -255)
-    c1 = int(pos_list[1] * 255)
+    c1 = int(pos_list[1] * -255)
     c2 = int(pos_list[2] * 512)
     c3 = int(pos_list[3] * -512)
     if c0 < MLIMITLOW and c0 > -1 * MLIMITLOW:
