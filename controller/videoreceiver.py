@@ -8,10 +8,11 @@ import os
 # to do: video recording
 # alternate video: write raw frames as binary data w/o conversion
 
-FPS = 24.0
-SCREEN_SIZE = (640,480)
-
 class VideoReceiver(Thread):
+    """Receives and processes raw video stream from RPi"""
+    FPS = 24.0
+    SCREEN_SIZE = (640,480)
+
     def __init__(self, host, port = 5001):
         Thread.__init__(self)
         self.host = host
@@ -28,6 +29,7 @@ class VideoReceiver(Thread):
         self.vid_name = [self.path + "/video%d.avi", 1]
 
     def run(self):
+        """Main VideoReceiver loop"""
         self.setup()
         while self.active:
             start = self.buff.find(b'\xff\xd8')
@@ -54,26 +56,31 @@ class VideoReceiver(Thread):
         self.cleanup()
 
     def setup(self):
+        """Create file paths, setup up receiver socket, do initial buffer read"""
         # create output directory as needed
         if not os.path.exists(self.path):
             os.makedirs(self.path)
         # check for existing screenshots, set id number
         # check for existing videos, set id number
         #fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        #self.vout = cv2.VideoWriter(self.vid_name, fourcc, FPS, SCREEN_SIZE)
+        #self.vout = cv2.VideoWriter(self.vid_name, fourcc, self.FPS, self.SCREEN_SIZE)
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect((self.host, self.port))
         self.buff += self.client.recv(self.buffsize)
 
     def get_frame(self):
+        """Returns frame to calling process"""
         with self.lock:
             return self.framebuffer
 
     def cleanup(self):
+        """Closes socket connection"""
         self.client.close()
 
     def snapshot(self):
+        """Set flag to record next frame as png snapshot"""
         self.takeSnapshot = True
 
     def toggleVideo(self):
+        """Toggle video recording (not yet implemented)"""
         self.recordVideo = not self.recordVideo
