@@ -7,7 +7,7 @@ import sys
 
 class Rover(object):
     """Primary control interface for Rover"""
-    FPS = 48
+    FPS = 24
     MLIMITLOW = 32
     LLIMITLOW = 96
     BLACK = (0,0,0)

@@ -10,7 +10,7 @@ import os
 
 class VideoReceiver(Thread):
     """Receives and processes raw video stream from RPi"""
-    FPS = 24.0
+    FPS = 24
     SCREEN_SIZE = (640,480)
 
     def __init__(self, host, port = 5001):
@@ -27,6 +27,7 @@ class VideoReceiver(Thread):
         self.path = "output"
         self.snap_name = [self.path + "/screenshot%d.png", 1]
         self.vid_name = [self.path + "/video%d.avi", 1]
+        self.video_written = False
 
     def run(self):
         """Main VideoReceiver loop"""
@@ -44,8 +45,7 @@ class VideoReceiver(Thread):
                         self.snap_name[1] += 1
                         self.takeSnapshot = False
                     if self.recordVideo:
-                        #self.vout.write(image) 
-                        pass
+                        self.vout.write(image) 
                     frameSize = image.shape[1::-1]
                     rgbframe = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                     pygameFrame = pygame.image.frombuffer(rgbframe.tostring(), frameSize, 'RGB')
@@ -62,8 +62,24 @@ class VideoReceiver(Thread):
             os.makedirs(self.path)
         # check for existing screenshots, set id number
         # check for existing videos, set id number
-        #fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        #self.vout = cv2.VideoWriter(self.vid_name, fourcc, self.FPS, self.SCREEN_SIZE)
+        max_screen = 0
+        max_vid = 0
+        for f in os.listdir(self.path):
+            if f[-3:] == "png":
+                num = int(f[10:-4])
+                if num > max_screen:
+                    max_screen = num
+            if f[-3:] == "avi":
+                num = int(f[5:-4])
+                if num > max_vid:
+                    max_vid = num
+        self.snap_name[1] = max_screen + 1
+        self.vid_name[1] = max_vid + 1
+
+        # open file for writing video.  each run will open a new file
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        self.vout = cv2.VideoWriter(self.vid_name[0] % self.vid_name[1], fourcc, self.FPS, 
+                self.SCREEN_SIZE)
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect((self.host, self.port))
         self.buff += self.client.recv(self.buffsize)
@@ -74,8 +90,10 @@ class VideoReceiver(Thread):
             return self.framebuffer
 
     def cleanup(self):
-        """Closes socket connection"""
+        """Closes socket connection, cleans up video file"""
         self.client.close()
+        if not self.video_written:
+            os.remove(self.vid_name[0] % self.vid_name[1])
 
     def snapshot(self):
         """Set flag to record next frame as png snapshot"""
@@ -83,4 +101,6 @@ class VideoReceiver(Thread):
 
     def toggleVideo(self):
         """Toggle video recording (not yet implemented)"""
+        if not self.video_written:
+            self.video_written = True
         self.recordVideo = not self.recordVideo
