@@ -3,13 +3,13 @@ Rover Controller Python Application on (Linux*) PC
 -Requires wifi connection to rover (ideally in access point mode for portability)
 -Displays video stream from camera
 -Reads input from gamepad, converts to control code, sends to zmq socket (REQ-REP pattern)
--Reads reply from RPi zmq server, displays battery voltage/low voltage warning
+-Reads reply from RPi zmq server, displays battery voltage (low voltage warning in future rev)
 -Left analog stick controls dc motors for movement
 -Right analog stick controls camera pan/tilt
 -Button0 ('A' on XBox 360-style gamepad) captures the next video frame as a still image
 -Button1 ('B' on XBox 360-style gamepad) toggles video recording to file.
 
-Python librarys: 
+Python libraries: 
   pygame
   opencv
   zmq
