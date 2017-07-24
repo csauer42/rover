@@ -5,7 +5,6 @@ import numpy as np
 import pygame
 import os
 
-# to do: video recording
 # alternate video: write raw frames as binary data w/o conversion
 
 class VideoReceiver(Thread):
@@ -60,8 +59,7 @@ class VideoReceiver(Thread):
         # create output directory as needed
         if not os.path.exists(self.path):
             os.makedirs(self.path)
-        # check for existing screenshots, set id number
-        # check for existing videos, set id number
+        # check for existing screenshots/videos, set id numbers
         max_screen = 0
         max_vid = 0
         for f in os.listdir(self.path):
@@ -100,7 +98,7 @@ class VideoReceiver(Thread):
         self.takeSnapshot = True
 
     def toggleVideo(self):
-        """Toggle video recording (not yet implemented)"""
+        """Toggle video recording"""
         if not self.video_written:
             self.video_written = True
         self.recordVideo = not self.recordVideo
