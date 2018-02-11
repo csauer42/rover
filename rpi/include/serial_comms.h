@@ -10,6 +10,7 @@
 #include <cstdint>
 #include "constants.h"
 
+/** writes command to serial device and reads reply */
 float writeCommand(uint8_t[], int);
 
 #endif

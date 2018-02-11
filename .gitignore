@@ -1,6 +1,7 @@
 avr/bin
 avr/build
 rpi/bin
+rpi/tests
 rpi/build
 controller/output
 *.swp

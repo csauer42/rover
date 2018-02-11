@@ -13,7 +13,7 @@ int open_port(const char *port) {
         return ERRLLOCK;
     }
 
-    fd = open(port, O_RDWR | O_NOCTTY | O_SYNC); // | O_NDELAY);
+    fd = open(port, O_RDWR | O_NOCTTY | O_SYNC);
     if (fd == -1) {
         return ERRPOPEN;
     } else {
@@ -45,7 +45,6 @@ int setup_port(int fd) {
     tty.c_cflag &= ~CSIZE;
     tty.c_cflag |= CS8;
     tty.c_cflag &= ~PARENB;
-    //tty.c_cflag &= ~CSTOPB; // defaults to off/covered by CS8
     tty.c_cflag &= ~CRTSCTS;
 
     tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);

@@ -11,7 +11,7 @@ float writeCommand(uint8_t c[], int fd) {
     }
 
     tcdrain(fd);
-    usleep(100000);
+    usleep(100000); // 100ms
 
     memset(vret, 0, 2);
     memset(c, 0, CLENGTH);
@@ -24,6 +24,6 @@ float writeCommand(uint8_t c[], int fd) {
         return 10.0 * ((vret[0]<<8)|vret[1]) / 1023.0;
     } else {
         std::cerr << "Error on return: " << rc << std::endl;
-        return -1.0;
+        return -1.0f;
     }
 }

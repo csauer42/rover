@@ -12,7 +12,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-/** @brief Library error codes */
+/** error codes */
 #define ERRLOPEN     -1
 #define ERRLLOCK     -2
 #define ERRPOPEN     -3
@@ -24,18 +24,16 @@
 #define ERRLUNLOCK   -16
 #define ERRLREMOVE   -32
 
-/** @brief Serial port lock file name */
+/** Serial port lock file name */
 #define LOCKNAME "/tmp/serial_lock"
-/** @brief Baudrate for ftdi serial connection */
+/** Baudrate for serial connection */
 #define TTYBAUDRATE B38400
 
-/** @brief Serial port lock file descriptor */
-//int lock_file;
-/** @brief Open serial port and create lockfile */
+/** Open serial port and create lockfile */
 int open_port(const char*);
-/** @brief Initialize port (linux handling) */
+/** Initialize port (linux handling) */
 int setup_port(int);
-/** @brief Closes serial port and removes lock file */
+/** Closes serial port and removes lock file */
 int close_port(int);
 
 #endif

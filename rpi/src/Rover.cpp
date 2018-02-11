@@ -6,9 +6,9 @@ Rover::Rover(const char *ttydevice) {
     serialfd = open_port(ttydevice);
     int rc = setup_port(serialfd);
     if (rc < 0) {
-       // raise exception
+       throw std::runtime_error("Failed to set up serial port");
     }
-    // open zmq socket
+    // open zmq socket, will throw zmq::error_t if they fail
     ctx = new zmq::context_t(1);
     socket = new zmq::socket_t(*ctx, ZMQ_REP);
     // set socket parameters
@@ -23,8 +23,9 @@ Rover::~Rover() {
 }
 
 void Rover::run() {
+    float voltageReturn = 0.0f;
+
     while (runflag) {
-        float voltageReturn = -2.0f; // request error
         zmq::message_t request;
         try {
             socket->recv(&request);
@@ -32,17 +33,8 @@ void Rover::run() {
             if (!runflag) break;
         }
         if (request.size()/sizeof(int) == 4) {
-            convertValues((int*)request.data(), command);
-///////// start debug
-//          for (int i = 0; i < CLENGTH; i++) {
-//              std::cout << std::hex << std::setfill('0') << std::setw(2) << (int)command[i] << " ";
-//          }
-//          std::cout << std::dec << std::endl;
-///////// end debug
-            voltageReturn = writeCommand(command, serialfd); // reply error or voltage
-///////// start debug
-//          std::cout << "Voltage returned: " << voltageReturn << std::endl;
-///////// end debug            
+            convertValues(static_cast<int*>(request.data()), command);
+            voltageReturn = writeCommand(command, serialfd); // replies with voltage
         }
         zmq::message_t response(4);
         memcpy(response.data(), &voltageReturn, sizeof(float));

@@ -30,7 +30,11 @@ class ControlIO(Thread):
             if request is not None:
                 if self.nextRequest != self.lastRequest:
                     self.ready = False
-                    self.socket.send(self.nextRequest)
+                    try:
+                        self.socket.send(self.nextRequest)
+                    except:
+                        print("Error sending request")
+                        continue
                     try:
                         reply = self.socket.recv()
                         with self.vlock:

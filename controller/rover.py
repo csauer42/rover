@@ -7,9 +7,11 @@ import sys
 
 class Rover(object):
     """Primary control interface for Rover"""
-    FPS = 24
+    FPS = 15
     MLIMITLOW = 32
     LLIMITLOW = 96
+    WIDTH = 1280
+    HEIGHT = 960
     BLACK = (0,0,0)
     WHITE = (255,255,255)
     RED = (255,0,0)
@@ -30,7 +32,7 @@ class Rover(object):
         else:
             print("Gamepad not found.  Exiting.")
             sys.exit(2)
-        self.screen = pygame.display.set_mode([640,480])
+        self.screen = pygame.display.set_mode([self.WIDTH,self.HEIGHT])
     
         pygame.display.set_caption("Rover Control")
         self.video_receiver = VideoReceiver(self.ip)
@@ -63,13 +65,13 @@ class Rover(object):
     def gamepad_position(self, clist):
         """Diplay gamepad analog stick positions to screen"""
         TextSurf, TextRect = self.text_objects("Move [%4d,%4d]    Look[%4d,%4d]" % clist)
-        TextRect.center = (320,400)
+        TextRect.center = (self.WIDTH-1000, self.HEIGHT-100)
         self.screen.blit(TextSurf, TextRect)
     
     def battery_voltage(self, voltage):
         """Display battery voltage to screen"""
         TextSurf, TextRect = self.text_objects("Voltage: %.2f" % voltage)
-        TextRect.center = (75, 460)
+        TextRect.center = (self.WIDTH-280, self.HEIGHT-100)
         self.screen.blit(TextSurf, TextRect)
     
     def run(self):
@@ -77,6 +79,23 @@ class Rover(object):
         self.setup()
 
         while not self.stop:
+            m0 = self.gamepad.get_axis(1)
+            m1 = self.gamepad.get_axis(0)
+            l0 = self.gamepad.get_axis(4)
+            l1 = self.gamepad.get_axis(3)
+
+            values = ( m0, m1, l0, l1 )
+            gamepad_values = self.js_convert(values)
+
+            self.screen.fill(self.BLACK)
+            self.screen.blit(self.video_receiver.get_frame(), (0,0))
+            self.gamepad_position(gamepad_values)
+            self.battery_voltage(self.cio.get_voltage())
+            pygame.display.flip()
+
+            if self.cio.is_ready():
+                self.cio.send_command(gamepad_values)
+
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.stop = True
@@ -87,19 +106,6 @@ class Rover(object):
                     elif event.button == 1:
                         print("Doing video.")
                         self.video_receiver.toggleVideo()
-            m0 = self.gamepad.get_axis(1)
-            m1 = self.gamepad.get_axis(0)
-            l0 = self.gamepad.get_axis(4)
-            l1 = self.gamepad.get_axis(3)
-            values = ( m0, m1, l0, l1 )
-            self.screen.fill(self.BLACK)
-            self.screen.blit(self.video_receiver.get_frame(), (0,0))
-            gamepad_values = self.js_convert(values)
-            if self.cio.is_ready():
-                self.cio.send_command(gamepad_values)
-            self.gamepad_position(gamepad_values)
-            self.battery_voltage(self.cio.get_voltage())
-            pygame.display.flip()
             self.clock.tick(self.FPS)
     
         self.video_receiver.active = False
