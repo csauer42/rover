@@ -5,7 +5,7 @@ RedBear IoT pHat (which could be replaced by a Raspberry Pi Zero W) and PiCamera
 command conversion.  ATMega328P connected via UART for DC/servo motor control (PWM outputs) and battery 
 voltage monitor.  Camera mounted on micro-servo pan-tilt module for independent look control (+/- 90 
 degrees vertical and horizontal from straight ahead). Powered by 7 AA NiMH batteries providing ~8.4 volts 
-to DC motors via L293 H-bridge and 5 volts to the rest of the circuit using a LM2575T-5.0 1A switching regulator.
+to DC motors via L293D H-bridge and 5 volts to the rest of the circuit using a LM2575T-5.0 1A switching regulator.
 
 <img src="http://i.imgur.com/s8KuVWz.jpg" alt="Rover side view" style="width:300px"><img src="http://i.imgur.com/gCrFFxG.jpg" alt="Rover front view" style="width:300px">
 

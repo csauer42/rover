@@ -35,7 +35,7 @@ class Rover(object):
         self.screen = pygame.display.set_mode([self.WIDTH,self.HEIGHT])
     
         pygame.display.set_caption("Rover Control")
-        self.video_receiver = VideoReceiver(self.ip)
+        self.video_receiver = VideoReceiver(self.ip, self.FPS, (self.WIDTH, self.HEIGHT))
         self.video_receiver.start()
     
         self.cio = ControlIO(self.ip)

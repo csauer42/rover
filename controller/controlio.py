@@ -27,24 +27,23 @@ class ControlIO(Thread):
         while self.active:
             with self.rlock:
                 request = self.nextRequest
-            if request is not None:
-                if self.nextRequest != self.lastRequest:
-                    self.ready = False
-                    try:
-                        self.socket.send(self.nextRequest)
-                    except:
-                        print("Error sending request")
-                        continue
-                    try:
-                        reply = self.socket.recv()
-                        with self.vlock:
-                            self.voltage[self.v_index]  = struct.unpack("<f", reply)[0]
-                            self.v_index = (self.v_index + 1) % self.VCOUNT
-                        self.lastRequest = self.nextRequest
-                        self.nextRequest = None
-                    except:
-                        print("Error in recv block")
-                    self.ready = True
+                self.nextRequest = None
+            if request is not None and request != self.lastRequest:
+                self.ready = False
+                try:
+                    self.socket.send(request)
+                except:
+                    print("Error sending request")
+                    continue
+                self.lastRequest = request
+                try:
+                    reply = self.socket.recv()
+                    with self.vlock:
+                        self.voltage[self.v_index]  = struct.unpack("<f", reply)[0]
+                        self.v_index = (self.v_index + 1) % self.VCOUNT
+                except:
+                    print("Error in recv block")
+                self.ready = True
         self.cleanup()
 
     def setup(self):

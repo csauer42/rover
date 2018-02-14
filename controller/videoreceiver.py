@@ -9,17 +9,16 @@ import os
 
 class VideoReceiver(Thread):
     """Receives and processes raw video stream from RPi"""
-    FPS = 15
-    SCREEN_SIZE = (1280,960)
-
-    def __init__(self, host, port = 5001):
+    def __init__(self, host, fps, screen_size, port = 5001):
         Thread.__init__(self)
         self.host = host
         self.lock = Lock()
+        self.FPS = fps
+        self.SCREEN_SIZE = screen_size
         self.framebuffer = pygame.Surface(self.SCREEN_SIZE)
         self.active = True
         self.buff = b''
-        self.buffsize = 1024
+        self.buffsize = 32768 
         self.port = port
         self.takeSnapshot = False
         self.recordVideo = False
@@ -38,6 +37,7 @@ class VideoReceiver(Thread):
                 frame = self.buff[start:stop+2]
                 self.buff = self.buff[stop+2:]
                 if len(frame) > 0:
+                    # decode image from stream and resize
                     image = cv2.imdecode(np.fromstring(frame, dtype=np.uint8), cv2.IMREAD_COLOR)
                     image = cv2.resize(image, (0,0), fx=2.0, fy=2.0)
                     if self.takeSnapshot:
@@ -46,8 +46,11 @@ class VideoReceiver(Thread):
                         self.takeSnapshot = False
                     if self.recordVideo:
                         self.vout.write(image) 
+                    # convert (h, w, d) to (w, h) for pygame
                     frameSize = image.shape[1::-1]
+                    # convert image format from openCV to pygame
                     rgbframe = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                    # create frame for pygame surface and put in buffer
                     pygameFrame = pygame.image.frombuffer(rgbframe.tostring(), frameSize, 'RGB')
                     with self.lock:
                         self.framebuffer = pygameFrame
