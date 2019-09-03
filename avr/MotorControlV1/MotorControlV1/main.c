@@ -1,5 +1,5 @@
 /** MotorControl for Rover project, handles 6x pwm
- *  channels for dc/servo motor control and battery 
+ *  channels for dc/servo motor control and battery
  *  voltage read through adc, controlled via UART
  */
 
@@ -31,17 +31,17 @@ int main(void)
 	int i;
 	uint16_t voltRef = 0;
 	clearCommand(command);
-    PWMInit();
+	PWMInit();
 	zeroAll();
 	USART_init();
 	initADC();
 
-	
+
 	while (1) {
-		for (i=0; i < CLENGTH; i++) {             // fragile, switch to UART interrupts
-			command[i] = USART_receive();         // to enable smoother acceleration/motion
-			if (i > 0 && command[i] == 0xFF) {    // track current vs target motor values,
-				command[0] = 0xFF;                // change gradually in main loop
+		for (i=0; i < CLENGTH; i++) {			 // fragile, switch to UART interrupts
+			command[i] = USART_receive();		 // to enable smoother acceleration/motion
+			if (i > 0 && command[i] == 0xFF) {	// track current vs target motor values,
+				command[0] = 0xFF;				// change gradually in main loop
 				i = 0;
 			}
 		}
@@ -78,7 +78,7 @@ void PWMInit() {
 	PORTB = 0;
 	PORTD = 0;
 	//PORTC ??
-	
+
 	// set all 3 timer counters to clear OC* when up-counting, phase-correct pwm,
 	// no prescaling
 	TCCR0A |= ((1<<COM0A1) | (1<<COM0B1) | (1<<WGM00));
@@ -91,16 +91,16 @@ void PWMInit() {
 
 	TCCR2A |= ((1 << COM2A1) | (1<<COM2B1) | (1<<WGM20));
 	TCCR2B |= ((1<<WGM20) | (1<<CS20));
-	
+
 	// set all pwm pins to output
 	DDRB |= ((1<<DDB1) | (1<<DDB2) | (1<<DDB3));
 	DDRD |= ((1<<DDD3) | (1<<DDD5) | (1<<DDD6));
-	
-	// set ADC pin defaults to input 
+
+	// set ADC pin defaults to input
 }
 
 void clearCommand(uint8_t c[]) {
-    int i;
+	int i;
 	for (i=0; i<CLENGTH; i++) {
 		c[i] = 0;
 	}
@@ -111,12 +111,12 @@ void setPWM(uint8_t c[]) {
 	OCR0A = c[1];
 	OCR2A = c[2];
 
-    // servo vert/horiz	
+	// servo vert/horiz
 	uint16_t look_vertical = (c[5] << 8) | c[6];
 	uint16_t look_horizontal = (c[7] << 8) | c[8];
 	OCR1A = ICR1 * (1.0 + (look_vertical/1023.0)) / 20;
 	OCR1B = ICR1 * (1.0 + (look_horizontal/1023.0)) / 20;
-	
+
 	// motor backward l/r
 	OCR0B = c[3];
 	OCR2B = c[4];
@@ -125,10 +125,10 @@ void setPWM(uint8_t c[]) {
 void zeroAll() {
 	OCR0A = 0;
 	OCR2A = 0;
-	
+
 	OCR1A = ICR1 * 1.5 / 20;
 	OCR1B = ICR1 * 1.5 / 20;
-	
+
 	OCR0B = 0;
 	OCR2A = 0;
 }
@@ -145,6 +145,7 @@ void initADC() {
 	ADMUX |= (1<<REFS0);  // use AVcc
 	ADCSRA |= (1<<ADEN);  // enable, no prescaler
 }
+
 uint16_t readADC(uint8_t channel) {
 	ADMUX = (ADMUX & 0xF0) | (channel & 0x0F);
 	ADCSRA |= (1<<ADSC);

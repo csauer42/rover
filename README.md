@@ -1,10 +1,10 @@
 # Mini-Rover Project
 
 ARM/AVR-based rover with video feed, controlled via USB gamepad analog sticks.  Raspberry Pi Zero with
-RedBear IoT pHat (which could be replaced by a Raspberry Pi Zero W) and PiCamera handles wifi, video, and 
-command conversion.  ATMega328P connected via UART for DC/servo motor control (PWM outputs) and battery 
-voltage monitor.  Camera mounted on micro-servo pan-tilt module for independent look control (+/- 90 
-degrees vertical and horizontal from straight ahead). Powered by 7 AA NiMH batteries providing ~8.4 volts 
+RedBear IoT pHat (which could be replaced by a Raspberry Pi Zero W) and PiCamera handles wifi, video, and
+command conversion.  ATMega328P connected via UART for DC/servo motor control (PWM outputs) and battery
+voltage monitor.  Camera mounted on micro-servo pan-tilt module for independent look control (+/- 90
+degrees vertical and horizontal from straight ahead). Powered by 7 AA NiMH batteries providing ~8.4 volts
 to DC motors via L293D H-bridge and 5 volts to the rest of the circuit using a LM2575T-5.0 1A switching regulator.
 
 <img src="http://i.imgur.com/s8KuVWz.jpg" alt="Rover side view" style="width:300px"><img src="http://i.imgur.com/gCrFFxG.jpg" alt="Rover front view" style="width:300px">
@@ -21,8 +21,8 @@ to motor control values on PWM pins.  Also reads battery voltage with ADC pin.
 
 Python application for converting gamepad input to 4 integer values, trasmitted
 over ZeroMQ REQ/REP socket to Raspberry Pi.  Display MPEG feed from Pi Camera and
-battery voltage from AVR.  Allows snapshots and video recording on controller device. 
-OpenCV decoding and processing allow general computer-vision additions before frame 
+battery voltage from AVR.  Allows snapshots and video recording on controller device.
+OpenCV decoding and processing allow general computer-vision additions before frame
 is provided to display thread.
 
 ### rpi
